@@ -1,0 +1,15 @@
+server:
+  port: 8100
+
+database:
+  host: ${DATABASE_HOST}
+  port: ${DATABASE_PORT}
+  user: ${DATABASE_USER}
+  password: ${DATABASE_PASSWORD}
+  dbname: ${DATABASE_DB_NAME:user}
+
+redis:
+  host: ${REDIS_HOST}
+  port: ${REDIS_PORT}
+  password: ${REDIS_PASSWORD}
+  db: ${REDIS_DB:0}
