@@ -140,8 +140,7 @@ SET
   last_name = $3,
   email = $4,
   phone = $5,
-  password = $6,
-  updated_at = $7
+  updated_at = $6
 WHERE id = $1
 `
 
@@ -151,7 +150,6 @@ type UpdateUserParams struct {
 	LastName  string
 	Email     string
 	Phone     pgtype.Text
-	Password  string
 	UpdatedAt pgtype.Timestamp
 }
 
@@ -162,7 +160,24 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (pgconn.
 		arg.LastName,
 		arg.Email,
 		arg.Phone,
-		arg.Password,
 		arg.UpdatedAt,
 	)
+}
+
+const updateUserPassword = `-- name: UpdateUserPassword :execresult
+UPDATE users
+SET
+  password = $2,
+  updated_at = $3
+WHERE id = $1
+`
+
+type UpdateUserPasswordParams struct {
+	ID        pgtype.UUID
+	Password  string
+	UpdatedAt pgtype.Timestamp
+}
+
+func (q *Queries) UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) (pgconn.CommandTag, error) {
+	return q.db.Exec(ctx, updateUserPassword, arg.ID, arg.Password, arg.UpdatedAt)
 }

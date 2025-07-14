@@ -6,14 +6,14 @@ import (
 )
 
 type User struct {
-	ID        string                `json:"id"`
-	FirstName string                `json:"first_name"`
-	LastName  string                `json:"last_name"`
-	Email     valueobject.Email     `json:"email"`
-	Phone     valueobject.Phone     `json:"phone"`
-	Password  valueobject.Passwword `json:"-"`
-	CreatedAt valueobject.DateTime  `json:"created_at"`
-	UpdatedAt valueobject.DateTime  `json:"updated_at"`
+	ID        string               `json:"id"`
+	FirstName string               `json:"first_name"`
+	LastName  string               `json:"last_name"`
+	Email     valueobject.Email    `json:"email"`
+	Phone     valueobject.Phone    `json:"phone"`
+	Password  valueobject.Password `json:"-"`
+	CreatedAt valueobject.DateTime `json:"created_at"`
+	UpdatedAt valueobject.DateTime `json:"updated_at"`
 }
 
 func NewUser(firstName, lastName, email, phone, password, createdAt, updatedAt string) (*User, error) {

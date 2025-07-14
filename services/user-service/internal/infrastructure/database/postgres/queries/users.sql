@@ -18,8 +18,14 @@ SET
   last_name = $3,
   email = $4,
   phone = $5,
-  password = $6,
-  updated_at = $7
+  updated_at = $6
+WHERE id = $1;
+
+-- name: UpdateUserPassword :execresult
+UPDATE users
+SET
+  password = $2,
+  updated_at = $3
 WHERE id = $1;
 
 -- name: GetUserByID :one
