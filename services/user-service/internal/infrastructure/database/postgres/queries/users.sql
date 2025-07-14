@@ -32,4 +32,4 @@ WHERE email = $1;
 
 -- name: GetPublicProfileByIds :many
 SELECT id, first_name, last_name FROM users
-WHERE id = ANY($1);
+WHERE id = ANY($1::string[]);

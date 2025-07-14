@@ -14,7 +14,7 @@ import (
 
 const getPublicProfileByIds = `-- name: GetPublicProfileByIds :many
 SELECT id, first_name, last_name FROM users
-WHERE id = ANY($1)
+WHERE id = ANY($1::string[])
 `
 
 type GetPublicProfileByIdsRow struct {
@@ -23,8 +23,8 @@ type GetPublicProfileByIdsRow struct {
 	LastName  string
 }
 
-func (q *Queries) GetPublicProfileByIds(ctx context.Context, id pgtype.UUID) ([]GetPublicProfileByIdsRow, error) {
-	rows, err := q.db.Query(ctx, getPublicProfileByIds, id)
+func (q *Queries) GetPublicProfileByIds(ctx context.Context, dollar_1 []string) ([]GetPublicProfileByIdsRow, error) {
+	rows, err := q.db.Query(ctx, getPublicProfileByIds, dollar_1)
 	if err != nil {
 		return nil, err
 	}

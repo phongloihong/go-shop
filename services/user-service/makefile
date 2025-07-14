@@ -1,0 +1,2 @@
+gen-query:
+	sqlc generate

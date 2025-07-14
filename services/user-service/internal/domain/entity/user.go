@@ -40,6 +40,27 @@ func NewUser(firstName, lastName, email, phone, password, createdAt, updatedAt s
 	return user, nil
 }
 
+func UserFromDatabase(id, firstName, lastName, email, phone, password string, createdAt, updatedAt int64) *User {
+	passwordVO := valueobject.NewPassword(password)
+	emailVO := valueobject.NewEmail(email)
+	phoneVO := valueobject.NewPhone(phone)
+	createdAtVO := valueobject.NewTime(createdAt)
+	updatedAtVO := valueobject.NewTime(updatedAt)
+
+	user := &User{
+		ID:        id,
+		FirstName: firstName,
+		LastName:  lastName,
+		Email:     emailVO,
+		Phone:     phoneVO,
+		Password:  passwordVO,
+		CreatedAt: createdAtVO,
+		UpdatedAt: updatedAtVO,
+	}
+
+	return user
+}
+
 func (u *User) Validate() error {
 	if err := u.Email.Validate(); err != nil {
 		return err
