@@ -8,8 +8,13 @@ import (
 )
 
 type Config struct {
-	Database DatabaseConfig `mapstructure:"database"`
-	Redis    RedisConfig    `mapstructure:"redis"`
+	Server   *ServerConfig   `mapstructure:"server"`
+	Database *DatabaseConfig `mapstructure:"database"`
+	Redis    *RedisConfig    `mapstructure:"redis"`
+}
+
+type ServerConfig struct {
+	Port int `mapstructure:"port"`
 }
 
 type DatabaseConfig struct {
@@ -30,10 +35,9 @@ type RedisConfig struct {
 func Load() (*Config, error) {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath(".")
-	viper.AddConfigPath("./config")
+	viper.AddConfigPath("./internal/config")
 
-	// Enable automatic env vars
+	// Enable automatic environment vars
 	viper.AutomaticEnv()
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
