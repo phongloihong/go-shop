@@ -6,17 +6,17 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type Passwword string
+type Password string
 
-func NewPassword(password string) Passwword {
-	return Passwword(password)
+func NewPassword(password string) Password {
+	return Password(password)
 }
 
-func (p Passwword) String() string {
+func (p Password) String() string {
 	return string(p)
 }
 
-func (p Passwword) Validate() error {
+func (p Password) Validate() error {
 	if len(p) < 8 {
 		return errors.New("password must be at least 8 characters long")
 	}
@@ -24,11 +24,11 @@ func (p Passwword) Validate() error {
 	return nil
 }
 
-func (p Passwword) Hash() (string, error) {
+func (p Password) Hash() (string, error) {
 	bytes, error := bcrypt.GenerateFromPassword([]byte(p), bcrypt.DefaultCost)
 	return string(bytes), error
 }
 
-func (p Passwword) CompareHash(hash Passwword) error {
+func (p Password) CompareHash(hash Password) error {
 	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(p))
 }

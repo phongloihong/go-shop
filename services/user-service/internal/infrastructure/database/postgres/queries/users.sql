@@ -18,8 +18,14 @@ SET
   last_name = $3,
   email = $4,
   phone = $5,
-  password = $6,
-  updated_at = $7
+  updated_at = $6
+WHERE id = $1;
+
+-- name: UpdateUserPassword :execresult
+UPDATE users
+SET
+  password = $2,
+  updated_at = $3
 WHERE id = $1;
 
 -- name: GetUserByID :one
@@ -32,4 +38,4 @@ WHERE email = $1;
 
 -- name: GetPublicProfileByIds :many
 SELECT id, first_name, last_name FROM users
-WHERE id = ANY($1);
+WHERE id = ANY(sqlc.arg(user_ids)::string[]);
