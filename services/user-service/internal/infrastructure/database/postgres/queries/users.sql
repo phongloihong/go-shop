@@ -38,4 +38,4 @@ WHERE email = $1;
 
 -- name: GetPublicProfileByIds :many
 SELECT id, first_name, last_name FROM users
-WHERE id = ANY($1::string[]);
+WHERE id = ANY(sqlc.arg(user_ids)::string[]);

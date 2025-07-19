@@ -23,8 +23,8 @@ type GetPublicProfileByIdsRow struct {
 	LastName  string
 }
 
-func (q *Queries) GetPublicProfileByIds(ctx context.Context, dollar_1 []string) ([]GetPublicProfileByIdsRow, error) {
-	rows, err := q.db.Query(ctx, getPublicProfileByIds, dollar_1)
+func (q *Queries) GetPublicProfileByIds(ctx context.Context, userIds []string) ([]GetPublicProfileByIdsRow, error) {
+	rows, err := q.db.Query(ctx, getPublicProfileByIds, userIds)
 	if err != nil {
 		return nil, err
 	}
