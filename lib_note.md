@@ -4,9 +4,9 @@
 - nats: lightweight message broker
 - sqlc + pgx + goose
 
-# logging system
+## logging system
 
 - Slog + Zap backend
 - Slog: standard library, standard interface, context-aware
-- separate loggin interface and implementation
-- future-proof: slog will become standard in go ecosystem
+- Separate logging interface and implementation
+- Future-proof: slog will become standard in go ecosystem
