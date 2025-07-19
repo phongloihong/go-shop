@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"go-shop/internal/config"
-	"go-shop/internal/delivery/http/router"
+	"github.com/phongloihong/go-shop/services/user-service/internal/config"
+	"github.com/phongloihong/go-shop/services/user-service/internal/delivery/http/router"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"

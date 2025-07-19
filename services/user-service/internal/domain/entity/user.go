@@ -1,8 +1,8 @@
 package entity
 
 import (
-	valueobject "travel-planning/internal/domain/valueObject"
-	"travel-planning/internal/pkg/utils"
+	valueobject "github.com/phongloihong/go-shop/services/user-service/internal/domain/valueObject"
+	"github.com/phongloihong/go-shop/services/user-service/internal/pkg/utils"
 )
 
 type User struct {

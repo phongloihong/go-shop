@@ -2,7 +2,8 @@ package repository
 
 import (
 	"context"
-	"travel-planning/internal/domain/entity"
+
+	"github.com/phongloihong/go-shop/services/user-service/internal/domain/entity"
 )
 
 type UserRepository interface {

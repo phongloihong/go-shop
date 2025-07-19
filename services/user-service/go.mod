@@ -1,4 +1,4 @@
-module go-shop
+module github.com/phongloihong/go-shop/services/user-service
 
 go 1.24.2
 

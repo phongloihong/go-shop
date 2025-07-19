@@ -4,8 +4,9 @@ import (
 	"context"
 	"fmt"
 	"time"
-	"travel-planning/internal/domain/entity"
-	"travel-planning/internal/infrastructure/database/postgres/sqlc"
+
+	"github.com/phongloihong/go-shop/services/user-service/internal/domain/entity"
+	"github.com/phongloihong/go-shop/services/user-service/internal/infrastructure/database/postgres/sqlc"
 
 	"github.com/jackc/pgx/v5/pgtype"
 )
