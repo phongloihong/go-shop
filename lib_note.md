@@ -9,4 +9,4 @@
 - Slog + Zap backend
 - Slog: standard library, standard interface, context-aware
 - separate loggin interface and implementation
-- future-proff: slog will become standard in go ecosystem
+- future-proof: slog will become standard in go ecosystem

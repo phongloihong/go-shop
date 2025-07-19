@@ -22,10 +22,14 @@ func NewUserRepository(db sqlc.DBTX) *UserRepository {
 
 func (ur *UserRepository) CreateUser(ctx context.Context, user *entity.User) (*entity.User, error) {
 	phone := pgtype.Text{}
-	phone.Scan(user.Phone)
+	if err := phone.Scan(user.Phone); err != nil {
+		return nil, fmt.Errorf("failed to scan phone: %w", err)
+	}
 
 	timeNow := pgtype.Timestamp{}
-	timeNow.Scan(time.Now())
+	if err := timeNow.Scan(time.Now()); err != nil {
+		return nil, fmt.Errorf("failed to scan timestamp: %w", err)
+	}
 
 	newUser, err := ur.queries.InsertUser(ctx, sqlc.InsertUserParams{
 		FirstName: user.FirstName,
@@ -56,13 +60,19 @@ func (ur *UserRepository) CreateUser(ctx context.Context, user *entity.User) (*e
 
 func (ur *UserRepository) UpdateUser(ctx context.Context, user *entity.User) (int64, error) {
 	uuid := pgtype.UUID{}
-	uuid.Scan(user.ID)
+	if err := uuid.Scan(user.ID); err != nil {
+		return 0, fmt.Errorf("failed to scan user ID: %w", err)
+	}
 
 	phone := pgtype.Text{}
-	phone.Scan(user.Phone)
+	if err := phone.Scan(user.Phone); err != nil {
+		return 0, fmt.Errorf("failed to scan user phone: %w", err)
+	}
 
 	updatedAt := pgtype.Timestamp{}
-	updatedAt.Scan(user.UpdatedAt.Time())
+	if err := updatedAt.Scan(user.UpdatedAt.Time()); err != nil {
+		return 0, fmt.Errorf("failed to scan updated timestamp: %w", err)
+	}
 
 	updateParams := sqlc.UpdateUserParams{
 		ID:        uuid,
@@ -82,10 +92,14 @@ func (ur *UserRepository) UpdateUser(ctx context.Context, user *entity.User) (in
 
 func (ur *UserRepository) ChangePassword(ctx context.Context, id string, newPassword string) (int64, error) {
 	uuid := pgtype.UUID{}
-	uuid.Scan(id)
+	if err := uuid.Scan(id); err != nil {
+		return 0, fmt.Errorf("failed to scan user ID: %w", err)
+	}
 
 	updatedAt := pgtype.Timestamp{}
-	updatedAt.Scan(time.Now())
+	if err := updatedAt.Scan(time.Now()); err != nil {
+		return 0, fmt.Errorf("failed to scan current time: %w", err)
+	}
 
 	updateParams := sqlc.UpdateUserPasswordParams{
 		ID:        uuid,
@@ -102,7 +116,9 @@ func (ur *UserRepository) ChangePassword(ctx context.Context, id string, newPass
 
 func (ur *UserRepository) GetUserByID(ctx context.Context, id string) (*entity.User, error) {
 	uuid := pgtype.UUID{}
-	uuid.Scan(id)
+	if err := uuid.Scan(id); err != nil {
+		return nil, fmt.Errorf("failed to scan UUID: %w", err)
+	}
 
 	user, err := ur.queries.GetUserByID(ctx, uuid)
 	if err != nil {

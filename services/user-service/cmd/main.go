@@ -20,5 +20,12 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	router.InitRouter(e)
-	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", cfg.Server.Port)))
+	
+	// Check if server config is nil and provide default port
+	port := 8080
+	if cfg.Server != nil {
+		port = cfg.Server.Port
+	}
+	
+	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", port)))
 }
