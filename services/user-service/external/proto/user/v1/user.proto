@@ -2,23 +2,23 @@ syntax = "proto3";
 
 package user.v1;
 
-import "validate/validate.proto";
+import "buf/validate/validate.proto";
 
 option go_package = "github.com/phongloihong/go-shop/services/user-service/external/proto/user/v1";
 
 // Register
 message RegisterRequest {
-  string email = 1 [(validate.rules).string.email = true];
+  string email = 1 [(buf.validate.field).string.email = true];
   string phone = 2;
-  string first_name = 3 [(validate.rules).string = {
+  string first_name = 3 [(buf.validate.field).string = {
     pattern: "^[A-Za-z]+( [A-Za-z]+)*$"
     max_bytes: 256
   }];
-  string last_name = 4 [(validate.rules).string = {
+  string last_name = 4 [(buf.validate.field).string = {
     pattern: "^[A-Za-z]+( [A-Za-z]+)*$"
     max_bytes: 256
   }];
-  string password = 5;
+  string password = 5 [(buf.validate.field).string = {min_bytes: 8}];
 }
 
 message RegisterResponse {
@@ -27,7 +27,7 @@ message RegisterResponse {
 
 // Login
 message LoginRequest {
-  string email = 1 [(validate.rules).string.email = true];
+  string email = 1 [(buf.validate.field).string.email = true];
   string password = 2;
 }
 
@@ -37,9 +37,9 @@ message LoginResponse {
 
 // Change Password
 message ChangePasswordRequest {
-  string email = 1 [(validate.rules).string.email = true];
+  string email = 1 [(buf.validate.field).string.email = true];
   string old_password = 2;
-  string new_password = 3;
+  string new_password = 3 [(buf.validate.field).string = {min_bytes: 8}];
 }
 
 message ChangePasswordResponse {
@@ -65,8 +65,8 @@ message GetPublicProfileRequest {
 
 message PublicProfile {
   string id = 1;
-  string first_name = 4;
-  string last_name = 5;
+  string first_name = 2;
+  string last_name = 3;
 }
 
 message GetPublicProfileResponse {
@@ -75,7 +75,8 @@ message GetPublicProfileResponse {
 
 service UserService {
   rpc Register(RegisterRequest) returns (RegisterResponse);
-  rpc Login(LoginRequest) returns (RegisterResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
   rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
   rpc GetProfile(GetProfileRequest) returns (GetProfileResponse);
+  rpc GetPublicProfile(GetPublicProfileRequest) returns (GetPublicProfileResponse);
 }

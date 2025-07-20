@@ -59,11 +59,13 @@ shell-redis: ## Open redis-cli shell
 	docker-compose exec redis redis-cli
 
 # Code generation
-proto: ## Generate protobuf files
-	docker-compose exec user-service sh -c "cd external && buf generate"
+proto-user: ## Generate protobuf files
+	docker-compose exec user-service sh -c "cd external && buf dep update && buf generate"
 
 sqlc: ## Generate SQLC code
 	docker-compose exec user-service make gen-query
+
+proto: proto-user ## Generate protobuf files
 
 gen: proto sqlc ## Generate all code (proto + sqlc)
 
