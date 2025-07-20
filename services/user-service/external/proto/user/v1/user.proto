@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package user.v1;
+
+import "validate/validate.proto";
+
+option go_package = "github.com/phongloihong/go-shop/services/user-service/external/proto/user/v1";
+
+// Register
+message RegisterRequest {
+  string email = 1 [(validate.rules).string.email = true];
+  string phone = 2;
+  string first_name = 3 [(validate.rules).string = {
+    pattern: "^[A-Za-z]+( [A-Za-z]+)*$"
+    max_bytes: 256
+  }];
+  string last_name = 4 [(validate.rules).string = {
+    pattern: "^[A-Za-z]+( [A-Za-z]+)*$"
+    max_bytes: 256
+  }];
+  string password = 5;
+}
+
+message RegisterResponse {
+  string token = 1;
+}
+
+// Login
+message LoginRequest {
+  string email = 1 [(validate.rules).string.email = true];
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+}
+
+// Change Password
+message ChangePasswordRequest {
+  string email = 1 [(validate.rules).string.email = true];
+  string old_password = 2;
+  string new_password = 3;
+}
+
+message ChangePasswordResponse {
+  bool success = 1;
+  string msg = 2;
+}
+
+// Get profile
+message GetProfileRequest {}
+
+message GetProfileResponse {
+  string id = 1;
+  string email = 2;
+  string phone = 3;
+  string first_name = 4;
+  string last_name = 5;
+}
+
+// Get public profile
+message GetPublicProfileRequest {
+  repeated string ids = 1;
+}
+
+message PublicProfile {
+  string id = 1;
+  string first_name = 4;
+  string last_name = 5;
+}
+
+message GetPublicProfileResponse {
+  repeated PublicProfile profiles = 1;
+}
+
+service UserService {
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc Login(LoginRequest) returns (RegisterResponse);
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
+  rpc GetProfile(GetProfileRequest) returns (GetProfileResponse);
+}
