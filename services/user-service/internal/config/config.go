@@ -22,7 +22,7 @@ type DatabaseConfig struct {
 	Port     int    `mapstructure:"port"`
 	User     string `mapstructure:"user"`
 	Password string `mapstructure:"password"`
-	DBName   string `mapstructure:"dbname"`
+	DBName   string `mapstructure:"db_name"`
 }
 
 type RedisConfig struct {
