@@ -1,18 +1,18 @@
-version: v1
+version: v2
+inputs:
+  - directory: proto
+plugins:
+  - local: protoc-gen-go
+    out: gen
+    opt: paths=source_relative
+  - local: protoc-gen-connect-go
+    out: gen
+    opt: paths=source_relative
 managed:
   enabled: true
-  go_package_prefix:
-    default: github.com/phongloihong/go-shop/services/user-service/external/proto
-plugins:
-  - plugin: buf.build/protocolbuffers/go
-    out: .
-    opt:
-      - paths=source_relative
-  - plugin: buf.build/connectrpc/go
-    out: .
-    opt:
-      - paths=source_relative
-  - plugin: buf.build/bufbuild/validate-go
-    out: .
-    opt:
-      - paths=source_relative
+  override:
+    - file_option: go_package_prefix
+      value: github.com/phongloihong/go-shop/services/user-service/external/gen
+  disable:
+    - file_option: go_package
+      module: buf.build/bufbuild/protovalidate
