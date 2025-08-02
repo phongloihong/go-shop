@@ -1,0 +1,37 @@
+{
+	"info": {
+		"_postman_id": "44218723-ddd8-49a7-aff7-cbf67ce115e7",
+		"name": "User",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3882436"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"first_name\": \"Phong\",\n    \"last_name\": \"Loi Hong\",\n    \"email\": \"phong@gmail.com\",\n    \"phone\": \"0969755154\",\n    \"password\": \"12345678\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{user_enpoint}}/user.v1.UserService/Register",
+					"host": [
+						"{{user_enpoint}}"
+					],
+					"path": [
+						"user.v1.UserService",
+						"Register"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
