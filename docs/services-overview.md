@@ -8,7 +8,7 @@ Go Shop follows a microservices architecture where each service is responsible f
 
 ### User Service
 - **Status**: ✅ Active Development
-- **Port**: 8080
+- **Port**: 8100
 - **Database**: user_db
 - **Redis DB**: 0
 - **Repository**: `services/user-service/`
@@ -83,7 +83,7 @@ make migrate-up
 ## Service Communication
 
 ### Synchronous Communication
-- **Protocol**: HTTP/HTTPS with Connect-Go (planned)
+- **Protocol**: HTTP/HTTPS with Connect-RPC
 - **Format**: Protocol Buffers
 - **Authentication**: JWT tokens
 - **Load Balancing**: Via container orchestration
@@ -201,7 +201,7 @@ REDIS_DB=2
 make health
 
 # Individual service health endpoints
-curl http://localhost:8080/health  # User Service
+curl http://localhost:8100/health  # User Service
 curl http://localhost:8081/health  # Product Service (planned)
 ```
 

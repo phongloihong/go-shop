@@ -17,7 +17,7 @@ This guide covers the complete Docker-based development environment for Go Shop.
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   user-service  │    │ product-service │    │  order-service  │
-│     :8080       │    │     :8081       │    │     :8082       │
+│     :8100       │    │     :8081       │    │     :8082       │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
          │                       │                       │
          └───────────────────────┼───────────────────────┘
@@ -51,7 +51,7 @@ make health
 ```
 
 ### 2. Service Access
-- **User Service**: http://localhost:8080
+- **User Service**: http://localhost:8100
 - **PostgreSQL**: localhost:5432 (postgres/password)
 - **Redis**: localhost:6379
 - **NATS**: localhost:4222, Management: localhost:8222
@@ -236,11 +236,11 @@ go mod tidy
 #### Port Conflicts
 ```bash
 # Check what's using ports
-lsof -i :8080
+lsof -i :8100
 lsof -i :5432
 
 # Stop conflicting services
-sudo lsof -ti:8080 | xargs sudo kill -9
+sudo lsof -ti:8100 | xargs sudo kill -9
 ```
 
 ### Performance Optimization

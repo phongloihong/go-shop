@@ -8,7 +8,7 @@ Go Shop is a microservices-based travel planning application built with Clean Ar
 
 ### Service Map
 
-- **user-service** (Port 8080): User management, authentication, profile handling
+- **user-service** (Port 8100): User management, authentication, profile handling
 - **product-service** (Port 8081): Planned - Product and service catalog management
 - **order-service** (Planned): Order processing and booking management
 
@@ -52,7 +52,7 @@ Go Shop is a microservices-based travel planning application built with Clean Ar
    ```
 
 3. **Access Services**
-   - User Service: http://localhost:8080
+   - User Service: http://localhost:8100
    - Database: localhost:5432
    - Redis: localhost:6379
 
@@ -74,7 +74,7 @@ Go Shop is a microservices-based travel planning application built with Clean Ar
 - **Language**: Go 1.24.2
 - **Database**: PostgreSQL 16 with pgx/v5 driver
 - **Cache**: Redis 7
-- **API Framework**: Echo v4 + Connect-Go (planned)
+- **API Framework**: Connect-RPC for type-safe HTTP/gRPC
 - **Message Broker**: NATS JetStream
 
 ### Development Tools
