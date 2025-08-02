@@ -6,7 +6,7 @@ database:
   port: ${DATABASE_PORT}
   user: ${DATABASE_USER}
   password: ${DATABASE_PASSWORD}
-  dbname: ${DATABASE_DB_NAME:user}
+  db_name: ${DATABASE_DB_NAME}
 
 redis:
   host: ${REDIS_HOST}

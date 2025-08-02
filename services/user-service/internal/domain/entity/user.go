@@ -16,7 +16,7 @@ type User struct {
 	UpdatedAt valueobject.DateTime `json:"updated_at"`
 }
 
-func NewUser(firstName, lastName, email, phone, password, createdAt, updatedAt string) (*User, error) {
+func NewUser(firstName, lastName, email, phone, password string) (*User, error) {
 	passwordVO := valueobject.NewPassword(password)
 	emailVO := valueobject.NewEmail(email)
 	phoneVO := valueobject.NewPhone(phone)

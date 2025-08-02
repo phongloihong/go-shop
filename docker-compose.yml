@@ -1,0 +1,171 @@
+services:
+  # Shared PostgreSQL Database for all services
+  postgres:
+    image: postgres:16-alpine
+    container_name: go-shop-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      # Create multiple databases on startup
+      POSTGRES_MULTIPLE_DATABASES: user_db,product_db,order_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # Script to create multiple databases
+      - ./scripts/create-multiple-databases.sh:/docker-entrypoint-initdb.d/create-multiple-databases.sh
+    networks:
+      - go-shop-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Shared Redis Cache for all services
+  redis:
+    image: redis:7-alpine
+    container_name: go-shop-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - go-shop-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # User Service (Development mode with hot reload)
+  user-service:
+    build:
+      context: ./services/user-service
+      dockerfile: docker/Dockerfile
+    container_name: go-shop-user-service
+    ports:
+      - "8100:8100"
+    volumes:
+      # Mount entire source code for hot reload with better performance
+      - type: bind
+        source: ./services/user-service
+        target: /app
+        consistency: cached
+      # Exclude build artifacts and dependencies for better performance
+      - /app/tmp
+      - /app/vendor
+      - /app/.git
+    environment:
+      # Database configuration (using user_db)
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: password
+      DATABASE_DB_NAME: user_db
+
+      # Redis configuration (using db 0 for user service)
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ""
+      REDIS_DB: 0
+
+      # Application configuration
+      ENV: development
+      LOG_LEVEL: debug
+    networks:
+      - go-shop-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:8080/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Product Service (for future use, commented out for now)
+  # product-service:
+  #   build:
+  #     context: ./services/product-service
+  #     dockerfile: docker/Dockerfile
+  #   container_name: go-shop-product-service
+  #   ports:
+  #     - "8081:8080"
+  #   volumes:
+  #     - ./services/product-service:/app
+  #     - /app/tmp
+  #     - /app/vendor
+  #   environment:
+  #     # Database configuration (using product_db)
+  #     DATABASE_HOST: postgres
+  #     DATABASE_PORT: 5432
+  #     DATABASE_USER: postgres
+  #     DATABASE_PASSWORD: password
+  #     DATABASE_DB_NAME: product_db
+  #
+  #     # Redis configuration (using db 1 for product service)
+  #     REDIS_HOST: redis
+  #     REDIS_PORT: 6379
+  #     REDIS_PASSWORD: ""
+  #     REDIS_DB: 1
+  #
+  #     ENV: development
+  #     LOG_LEVEL: debug
+  #   networks:
+  #     - go-shop-network
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+
+  # NATS Message Broker (for inter-service communication)
+  nats:
+    image: nats:2.10-alpine
+    container_name: go-shop-nats
+    ports:
+      - "4222:4222"
+      - "8222:8222" # HTTP monitoring port
+    command: "--jetstream --store_dir /data --http_port 8222"
+    volumes:
+      - nats_data:/data
+    networks:
+      - go-shop-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:8222/healthz",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  go-shop-network:
+    driver: bridge
+    name: go-shop-network
+
+volumes:
+  postgres_data:
+    name: go-shop-postgres-data
+  redis_data:
+    name: go-shop-redis-data
+  nats_data:
+    name: go-shop-nats-data
