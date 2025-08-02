@@ -101,7 +101,7 @@ func (x *RegisterRequest) GetPassword() string {
 
 type RegisterResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -136,11 +136,11 @@ func (*RegisterResponse) Descriptor() ([]byte, []int) {
 	return file_user_v1_user_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *RegisterResponse) GetToken() string {
+func (x *RegisterResponse) GetSuccess() bool {
 	if x != nil {
-		return x.Token
+		return x.Success
 	}
-	return ""
+	return false
 }
 
 // Login
@@ -626,9 +626,9 @@ const file_user_v1_user_proto_rawDesc = "" +
 	"\n" +
 	"first_name\x18\x03 \x01(\tB\"\xbaH\x1fr\x1d(\x80\x022\x18^[A-Za-z]+( [A-Za-z]+)*$R\tfirstName\x12?\n" +
 	"\tlast_name\x18\x04 \x01(\tB\"\xbaH\x1fr\x1d(\x80\x022\x18^[A-Za-z]+( [A-Za-z]+)*$R\blastName\x12#\n" +
-	"\bpassword\x18\x05 \x01(\tB\a\xbaH\x04r\x02 \bR\bpassword\"(\n" +
-	"\x10RegisterResponse\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\"I\n" +
+	"\bpassword\x18\x05 \x01(\tB\a\xbaH\x04r\x02 \bR\bpassword\",\n" +
+	"\x10RegisterResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\"I\n" +
 	"\fLoginRequest\x12\x1d\n" +
 	"\x05email\x18\x01 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"%\n" +

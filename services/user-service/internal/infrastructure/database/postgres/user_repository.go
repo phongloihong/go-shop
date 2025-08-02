@@ -23,7 +23,7 @@ func NewUserRepository(db sqlc.DBTX) *UserRepository {
 
 func (ur *UserRepository) CreateUser(ctx context.Context, user *entity.User) (*entity.User, error) {
 	phone := pgtype.Text{}
-	if err := phone.Scan(user.Phone); err != nil {
+	if err := phone.Scan(user.Phone.String()); err != nil {
 		return nil, fmt.Errorf("failed to scan phone: %w", err)
 	}
 
@@ -32,12 +32,17 @@ func (ur *UserRepository) CreateUser(ctx context.Context, user *entity.User) (*e
 		return nil, fmt.Errorf("failed to scan timestamp: %w", err)
 	}
 
+	hashPassword, err := user.Password.Hash()
+	if err != nil {
+		return nil, fmt.Errorf("failed to hash password %w", err)
+	}
+
 	newUser, err := ur.queries.InsertUser(ctx, sqlc.InsertUserParams{
 		FirstName: user.FirstName,
 		LastName:  user.LastName,
 		Email:     user.Email.String(),
 		Phone:     phone,
-		Password:  user.Password.String(),
+		Password:  hashPassword,
 		CreatedAt: timeNow,
 		UpdatedAt: timeNow,
 	})

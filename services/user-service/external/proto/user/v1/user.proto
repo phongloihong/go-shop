@@ -22,7 +22,7 @@ message RegisterRequest {
 }
 
 message RegisterResponse {
-  string token = 1;
+  bool success = 1;
 }
 
 // Login

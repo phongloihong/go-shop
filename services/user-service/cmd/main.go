@@ -4,13 +4,15 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/phongloihong/go-shop/services/user-service/internal/config"
-	"github.com/phongloihong/go-shop/services/user-service/internal/delivery/http/router"
+	"github.com/phongloihong/go-shop/services/user-service/internal/delivery/connect"
 	"github.com/phongloihong/go-shop/services/user-service/internal/infrastructure/database/postgres"
-
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
@@ -32,22 +34,32 @@ func main() {
 		}
 	}()
 
-	startHTTPServer(cfg)
+	fmt.Println("Connected to database successfully")
+
+	startConnectServer(cfg, conn)
 }
 
-func startHTTPServer(cfg *config.Config) error {
-	e := echo.New()
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
+func startConnectServer(cfg *config.Config, conn *pgx.Conn) {
+	server := connect.StartConnect(conn)
+	server.Addr = fmt.Sprintf(":%d", cfg.Server.Port)
 
-	// Initialize routes
-	router.InitRouter(e)
+	// handle graceful shutdown
+	go func() {
+		fmt.Println("Starting server on", server.Addr)
 
-	// Check if server config is nil and provide default port
-	port := 8080
-	if cfg.Server != nil {
-		port = cfg.Server.Port
-	}
+		if err := server.ListenAndServe(); err != nil {
+			log.Fatalf("Failed to start server: %v", err)
+		}
+	}()
 
-	return e.Start(fmt.Sprintf(":%d", port))
+	// wait for shutdown signal
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+	<-quit
+
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	server.Shutdown(ctx)
+
+	fmt.Println("Server gracefully stopped")
 }

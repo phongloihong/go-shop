@@ -81,10 +81,10 @@ download: ## Download go modules for user service
 
 # Database operations
 migrate-up: ## Run database migrations up
-	docker-compose exec user-service migrate -path ./internal/infrastructure/database/postgres/migrations -database "postgresql://postgres:password@postgres:5432/user_db?sslmode=disable" up
+	docker-compose exec user-service sh -c 'migrate -path ./internal/infrastructure/database/postgres/migrations -database "postgresql://$${DATABASE_USER}:$${DATABASE_PASSWORD}@$${DATABASE_HOST}:$${DATABASE_PORT}/$${DATABASE_DB_NAME}?sslmode=disable" up'
 
 migrate-down: ## Run database migrations down
-	docker-compose exec user-service migrate -path ./internal/infrastructure/database/postgres/migrations -database "postgresql://postgres:password@postgres:5432/user_db?sslmode=disable" down
+	docker-compose exec user-service sh -c 'migrate -path ./internal/infrastructure/database/postgres/migrations -database "postgresql://$${DATABASE_USER}:$${DATABASE_PASSWORD}@$${DATABASE_HOST}:$${DATABASE_PORT}/$${DATABASE_DB_NAME}?sslmode=disable" down'
 
 migrate-create: ## Create new migration file (usage: make migrate-create NAME=create_users_table)
 	docker-compose exec user-service migrate create -ext sql -dir ./internal/infrastructure/database/postgres/migrations $(NAME)

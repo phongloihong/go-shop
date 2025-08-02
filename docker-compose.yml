@@ -45,7 +45,7 @@ services:
       dockerfile: docker/Dockerfile
     container_name: go-shop-user-service
     ports:
-      - "8080:8080"
+      - "8100:8100"
     volumes:
       # Mount entire source code for hot reload with better performance
       - type: bind
@@ -169,4 +169,3 @@ volumes:
     name: go-shop-redis-data
   nats_data:
     name: go-shop-nats-data
-
