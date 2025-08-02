@@ -25,7 +25,7 @@ The User Service implements Clean Architecture with four distinct layers:
 
 - **[Domain Layer](architecture/domain-layer.md)**: Business entities, value objects, and domain logic
 - **[Application Layer](architecture/application-layer.md)**: Use cases and business orchestration
-- **[Adapter Layer](architecture/adapter-layer.md)**: HTTP/gRPC handlers and external interfaces
+- **[Adapter Layer](architecture/adapter-layer.md)**: Connect-RPC handlers and external interfaces
 - **[Infrastructure Layer](architecture/infrastructure-layer.md)**: Database, cache, and external service implementations
 
 ## APIs

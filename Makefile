@@ -118,7 +118,7 @@ health: ## Check health of all services
 	@echo "Redis:"
 	@docker-compose exec redis redis-cli ping || echo "Redis not ready"
 	@echo "User Service:"
-	@curl -sf http://localhost:8080/health >/dev/null && echo "User service healthy" || echo "User service not ready"
+	@curl -sf http://localhost:8100/health >/dev/null && echo "User service healthy" || echo "User service not ready"
 
 # Database utilities
 db-reset: ## Reset database (drop and recreate)

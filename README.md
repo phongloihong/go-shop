@@ -4,17 +4,93 @@ A **Clean Architecture** microservices application for collaborative travel plan
 
 ## Quick Start with Docker
 
+### Prerequisites
+- Docker Desktop installed and running
+- Git
+- Make (optional, for shortcuts)
+
+### Getting Started
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd go-shop
+   ```
+
+2. **Start all services**
+   ```bash
+   make dev
+   ```
+   This will start PostgreSQL, Redis, NATS, and the user service with hot reload.
+
+3. **Verify services are running**
+   ```bash
+   make health
+   ```
+
+4. **Access services**
+   - User Service: http://localhost:8100
+   - Database: localhost:5432 (postgres/password)
+   - Redis: localhost:6379
+   - NATS: localhost:4222
+
+### First Time Setup
+
 ```bash
-# Start all services
-make dev
+# Apply database migrations
+make migrate-up
 
-# View logs
+# Generate protobuf and SQLC code
+make gen
+
+# View logs to ensure everything is working
 make logs
+```
 
-# Access services
-# User Service: http://localhost:8080
-# Database: localhost:5432
-# Redis: localhost:6379
+### Development Workflow
+
+```bash
+# View real-time logs
+make logs-user
+
+# Access service container for debugging
+make shell
+
+# Reset database if needed
+make db-reset
+
+# Stop all services
+make stop
+```
+
+### Troubleshooting
+
+**Services won't start:**
+```bash
+# Check if Docker is running
+docker --version
+
+# Clean up and restart
+make clean
+make dev
+```
+
+**Database connection issues:**
+```bash
+# Check database status
+make shell-db
+
+# Reset database if corrupted
+make db-reset
+```
+
+**Port conflicts:**
+```bash
+# Check what's using port 8100
+lsof -i :8100
+
+# Kill processes using the port
+sudo lsof -ti:8100 | xargs sudo kill -9
 ```
 
 ## Table of Contents
@@ -55,7 +131,7 @@ make migrate-up   # Run database migrations
 
 **Services**
 
-- **user-service** (Port 8080): User management, authentication, profiles
+- **user-service** (Port 8100): User management, authentication, profiles
 - **product-service** (Port 8081): Coming soon
 
 ## Services
@@ -63,7 +139,7 @@ make migrate-up   # Run database migrations
 ### User Service
 
 - **Status**: ✅ Active Development
-- **Port**: 8080
+- **Port**: 8100
 - **Database**: user_db
 - **Features**: User registration, authentication, profile management
 - **Documentation**: [User Service Docs](services/user-service/docs/README.md)
@@ -88,7 +164,7 @@ This project follows **Clean Architecture** principles with strict dependency ru
 - **Language**: Go 1.24.2
 - **Database**: PostgreSQL with pgx/v5
 - **Cache**: Redis
-- **API**: Echo framework + Connect-Go (planned)
+- **API**: Connect-RPC for type-safe HTTP/gRPC
 - **Code Generation**: SQLC for type-safe SQL, Buf for protobuf
 - **Migration**: golang-migrate
 - **Messaging**: NATS (planned)
