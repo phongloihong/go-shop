@@ -32,6 +32,33 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"phong@gmail.com\",\n    \"password\": \"12345678\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{user_enpoint}}/user.v1.UserService/Login",
+					"host": [
+						"{{user_enpoint}}"
+					],
+					"path": [
+						"user.v1.UserService",
+						"Login"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

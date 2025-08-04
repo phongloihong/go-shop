@@ -1,6 +1,6 @@
 # User Service
 
-The User Service is a microservice responsible for user management in the go-shop travel planning application. It handles user registration, authentication, profile management, and provides user data to other services in the system.
+The User Service is a microservice responsible for user management in the go-shop travel planning application. It handles user registration, JWT-based authentication, profile management, and provides user data to other services in the system.
 
 ## Table of Contents
 
@@ -31,7 +31,7 @@ The User Service implements Clean Architecture with four distinct layers:
 ## APIs
 
 - **[User Management](apis/user-management.md)**: User CRUD operations and profile management
-- **[Authentication](apis/authentication.md)**: User authentication and authorization endpoints
+- **[Authentication](apis/authentication.md)**: JWT-based authentication with login endpoint
 
 ## Features
 
