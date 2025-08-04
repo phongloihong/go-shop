@@ -64,6 +64,11 @@ services:
       DATABASE_PASSWORD: password
       DATABASE_DB_NAME: user_db
 
+      # Auth configuration
+      PASSWORD_SECRET: secret_pw
+      ACCESS_SECRET: secret_ac_token
+      REFRESH_SECRET: secret_rf_token
+
       # Redis configuration (using db 0 for user service)
       REDIS_HOST: redis
       REDIS_PORT: 6379

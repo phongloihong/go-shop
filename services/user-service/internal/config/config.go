@@ -11,6 +11,7 @@ type Config struct {
 	Server   *ServerConfig   `mapstructure:"server"`
 	Database *DatabaseConfig `mapstructure:"database"`
 	Redis    *RedisConfig    `mapstructure:"redis"`
+	Auth     *AuthConfig     `mapstructure:"auth"`
 }
 
 type ServerConfig struct {
@@ -30,6 +31,12 @@ type RedisConfig struct {
 	Port     int    `mapstructure:"port"`
 	Password string `mapstructure:"password"`
 	DB       int    `mapstructure:"db"`
+}
+
+type AuthConfig struct {
+	PasswordSecret string `mapstructure:"password_secret"`
+	AccessSecret   string `mapstructure:"access_secret"`
+	RefreshSecret  string `mapstructure:"refresh_secret"`
 }
 
 func Load() (*Config, error) {

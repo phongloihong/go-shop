@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	domain_error "github.com/phongloihong/go-shop/services/user-service/internal/domain/domain_errors"
 	"github.com/phongloihong/go-shop/services/user-service/internal/domain/entity"
 	"github.com/phongloihong/go-shop/services/user-service/internal/infrastructure/database/postgres/sqlc"
 
@@ -24,17 +25,17 @@ func NewUserRepository(db sqlc.DBTX) *UserRepository {
 func (ur *UserRepository) CreateUser(ctx context.Context, user *entity.User) (*entity.User, error) {
 	phone := pgtype.Text{}
 	if err := phone.Scan(user.Phone.String()); err != nil {
-		return nil, fmt.Errorf("failed to scan phone: %w", err)
+		return nil, domain_error.NewInvalidData(fmt.Sprintf("invalid phone number: %s", user.Phone.String()))
 	}
 
 	timeNow := pgtype.Timestamp{}
 	if err := timeNow.Scan(time.Now()); err != nil {
-		return nil, fmt.Errorf("failed to scan timestamp: %w", err)
+		return nil, domain_error.NewInvalidData(fmt.Sprintf("failed to scan current time: %s", err.Error()))
 	}
 
 	hashPassword, err := user.Password.Hash()
 	if err != nil {
-		return nil, fmt.Errorf("failed to hash password %w", err)
+		return nil, domain_error.NewInternalError(fmt.Sprintf("failed to hash password: %s", err.Error()))
 	}
 
 	newUser, err := ur.queries.InsertUser(ctx, sqlc.InsertUserParams{
@@ -47,7 +48,11 @@ func (ur *UserRepository) CreateUser(ctx context.Context, user *entity.User) (*e
 		UpdatedAt: timeNow,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to create user: %w", err)
+		if isDuplicateKeyError(err) {
+			return nil, domain_error.NewAlreadyExistsError(fmt.Sprintf("user with email %s already exists", user.Email.String()))
+		}
+
+		return nil, domain_error.NewInternalError(fmt.Sprintf("failed to create user: %s", err.Error()))
 	}
 
 	ret := entity.UserFromDatabase(
@@ -67,17 +72,17 @@ func (ur *UserRepository) CreateUser(ctx context.Context, user *entity.User) (*e
 func (ur *UserRepository) UpdateUser(ctx context.Context, user *entity.User) (int64, error) {
 	uuid := pgtype.UUID{}
 	if err := uuid.Scan(user.ID); err != nil {
-		return 0, fmt.Errorf("failed to scan user ID: %w", err)
+		return 0, domain_error.NewInvalidData(fmt.Sprintf("invalid user ID: %s", user.ID))
 	}
 
 	phone := pgtype.Text{}
 	if err := phone.Scan(user.Phone); err != nil {
-		return 0, fmt.Errorf("failed to scan user phone: %w", err)
+		return 0, domain_error.NewInvalidData(fmt.Sprintf("invalid phone number: %s", user.Phone))
 	}
 
 	updatedAt := pgtype.Timestamp{}
 	if err := updatedAt.Scan(user.UpdatedAt.Time()); err != nil {
-		return 0, fmt.Errorf("failed to scan updated timestamp: %w", err)
+		return 0, domain_error.NewInvalidData(fmt.Sprintf("failed to scan updated timestamp: %s", err.Error()))
 	}
 
 	updateParams := sqlc.UpdateUserParams{
@@ -90,7 +95,7 @@ func (ur *UserRepository) UpdateUser(ctx context.Context, user *entity.User) (in
 	}
 	ret, err := ur.queries.UpdateUser(ctx, updateParams)
 	if err != nil {
-		return 0, fmt.Errorf("failed to update user: %w", err)
+		return 0, domain_error.NewInternalError(fmt.Sprintf("failed to update user: %s", err.Error()))
 	}
 
 	return ret.RowsAffected(), nil
@@ -99,12 +104,12 @@ func (ur *UserRepository) UpdateUser(ctx context.Context, user *entity.User) (in
 func (ur *UserRepository) ChangePassword(ctx context.Context, id string, newPassword string) (int64, error) {
 	uuid := pgtype.UUID{}
 	if err := uuid.Scan(id); err != nil {
-		return 0, fmt.Errorf("failed to scan user ID: %w", err)
+		return 0, domain_error.NewInvalidData(fmt.Sprintf("invalid user ID: %s", id))
 	}
 
 	updatedAt := pgtype.Timestamp{}
 	if err := updatedAt.Scan(time.Now()); err != nil {
-		return 0, fmt.Errorf("failed to scan current time: %w", err)
+		return 0, domain_error.NewInvalidData(fmt.Sprintf("failed to scan current time: %s", err.Error()))
 	}
 
 	updateParams := sqlc.UpdateUserPasswordParams{
@@ -114,7 +119,7 @@ func (ur *UserRepository) ChangePassword(ctx context.Context, id string, newPass
 	}
 	ret, err := ur.queries.UpdateUserPassword(ctx, updateParams)
 	if err != nil {
-		return 0, fmt.Errorf("failed to change password: %w", err)
+		return 0, domain_error.NewInternalError(fmt.Sprintf("failed to change password: %s", err.Error()))
 	}
 
 	return ret.RowsAffected(), nil
@@ -123,12 +128,12 @@ func (ur *UserRepository) ChangePassword(ctx context.Context, id string, newPass
 func (ur *UserRepository) GetUserByID(ctx context.Context, id string) (*entity.User, error) {
 	uuid := pgtype.UUID{}
 	if err := uuid.Scan(id); err != nil {
-		return nil, fmt.Errorf("failed to scan UUID: %w", err)
+		return nil, domain_error.NewInvalidData(fmt.Sprintf("invalid user ID: %s", id))
 	}
 
 	user, err := ur.queries.GetUserByID(ctx, uuid)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get user by ID: %w", err)
+		return nil, domain_error.NewInternalError(fmt.Sprintf("failed to get user by ID: %s", err.Error()))
 	}
 
 	return ur.sqlcUserToEntity(user), nil
@@ -137,7 +142,7 @@ func (ur *UserRepository) GetUserByID(ctx context.Context, id string) (*entity.U
 func (ur *UserRepository) GetUserByEmail(ctx context.Context, email string) (*entity.User, error) {
 	user, err := ur.queries.GetUserByEmail(ctx, email)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get user by email: %w", err)
+		return nil, domain_error.NewInternalError(fmt.Sprintf("failed to get user by email: %s", err.Error()))
 	}
 
 	return ur.sqlcUserToEntity(user), nil
@@ -147,7 +152,7 @@ func (ur *UserRepository) GetPublicProfileByIds(ctx context.Context, ids []strin
 	ret := make([]*entity.UserPublicProfile, 0)
 	users, err := ur.queries.GetPublicProfileByIds(ctx, ids)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get public profiles by IDs: %w", err)
+		return nil, domain_error.NewInternalError(fmt.Sprintf("failed to get public profiles by IDs: %s", err.Error()))
 	}
 
 	for _, user := range users {

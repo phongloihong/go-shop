@@ -32,7 +32,9 @@ message LoginRequest {
 }
 
 message LoginResponse {
-  string token = 1;
+  string access_token = 1;
+  string refresh_token = 2;
+  int64 expires_in = 3; // in seconds
 }
 
 // Change Password
