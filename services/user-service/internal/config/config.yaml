@@ -13,3 +13,8 @@ redis:
   port: ${REDIS_PORT}
   password: ${REDIS_PASSWORD}
   db: ${REDIS_DB:0}
+
+auth:
+  password_secret: ${PASSWORD_SECRET}
+  access_secret: ${ACCESS_SECRET}
+  refresh_secret: ${REFEESH_SECRET}

@@ -5,6 +5,7 @@ import (
 
 	"connectrpc.com/connect"
 	userv1 "github.com/phongloihong/go-shop/services/user-service/external/gen/user/v1"
+	domain_error "github.com/phongloihong/go-shop/services/user-service/internal/domain/domain_errors"
 	"github.com/phongloihong/go-shop/services/user-service/internal/usecase"
 	"github.com/phongloihong/go-shop/services/user-service/internal/usecase/dto"
 )
@@ -22,7 +23,7 @@ func NewUserServiceHandler(
 }
 
 func (h *userServiceHandler) Register(ctx context.Context, req *connect.Request[userv1.RegisterRequest]) (*connect.Response[userv1.RegisterResponse], error) {
-	params := dto.RegisterUserRequest{
+	params := dto.RegisterRequest{
 		FirstName: req.Msg.FirstName,
 		LastName:  req.Msg.LastName,
 		Email:     req.Msg.Email,
@@ -32,7 +33,7 @@ func (h *userServiceHandler) Register(ctx context.Context, req *connect.Request[
 
 	_, err := h.userUseCase.RegisterUser(ctx, params)
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInternal, err)
+		return nil, domain_error.MapError(err)
 	}
 
 	ret := &userv1.RegisterResponse{
@@ -43,7 +44,19 @@ func (h *userServiceHandler) Register(ctx context.Context, req *connect.Request[
 }
 
 func (h *userServiceHandler) Login(ctx context.Context, req *connect.Request[userv1.LoginRequest]) (*connect.Response[userv1.LoginResponse], error) {
-	return nil, nil
+	ret, err := h.userUseCase.Login(ctx, dto.LoginRequest{
+		Email:    req.Msg.Email,
+		Password: req.Msg.Password,
+	})
+	if err != nil {
+		return nil, domain_error.MapError(err)
+	}
+
+	return connect.NewResponse(&userv1.LoginResponse{
+		AccessToken:  ret.AccessToken,
+		RefreshToken: ret.RefreshToken,
+		ExpiresIn:    ret.ExpiresIn,
+	}), nil
 }
 
 func (h *userServiceHandler) ChangePassword(ctx context.Context, req *connect.Request[userv1.ChangePasswordRequest]) (*connect.Response[userv1.ChangePasswordResponse], error) {
