@@ -40,7 +40,7 @@ func main() {
 }
 
 func startConnectServer(cfg *config.Config, conn *pgx.Conn) {
-	server := connect.StartConnect(conn)
+	server := connect.StartConnect(cfg, conn)
 	server.Addr = fmt.Sprintf(":%d", cfg.Server.Port)
 
 	// handle graceful shutdown

@@ -34,6 +34,14 @@ SERVER_PORT=8080               # HTTP server port
 GRPC_PORT=9090                 # gRPC server port (if implemented)
 ```
 
+### Authentication Configuration
+
+```bash
+PASSWORD_SECRET=secret_pw       # Secret for password operations
+ACCESS_SECRET=secret_ac_token   # JWT access token signing secret
+REFRESH_SECRET=secret_rf_token  # JWT refresh token signing secret
+```
+
 ### NATS Configuration (Optional)
 
 ```bash
@@ -72,6 +80,11 @@ redis:
   password: ""
   db: 0
 
+auth:
+  password_secret: secret_pw
+  access_secret: secret_ac_token
+  refresh_secret: secret_rf_token
+
 server:
   host: localhost
   port: 8080
@@ -104,6 +117,11 @@ REDIS_PORT=6379
 REDIS_PASSWORD=
 REDIS_DB=0
 
+# Authentication
+PASSWORD_SECRET=secret_pw
+ACCESS_SECRET=secret_ac_token
+REFRESH_SECRET=secret_rf_token
+
 # Server
 SERVER_PORT=8080
 
@@ -132,6 +150,9 @@ export DATABASE_PASSWORD=password
 export DATABASE_DB_NAME=user_dev
 export REDIS_HOST=localhost
 export REDIS_PORT=6379
+export PASSWORD_SECRET=secret_pw
+export ACCESS_SECRET=secret_ac_token
+export REFRESH_SECRET=secret_rf_token
 export SERVER_PORT=8080
 export LOG_LEVEL=debug
 ```
@@ -150,12 +171,18 @@ For production deployment, ensure:
    - Configure appropriate ACLs
    - Enable SSL/TLS
 
-3. **Server Security:**
+3. **Authentication Security:**
+   - Use strong, randomly generated secrets for JWT tokens
+   - Rotate secrets regularly
+   - Store secrets securely (e.g., AWS Secrets Manager, HashiCorp Vault)
+   - Never commit secrets to version control
+
+4. **Server Security:**
    - Use HTTPS (configure reverse proxy)
    - Set appropriate timeouts
    - Configure rate limiting
 
-4. **Logging:**
+5. **Logging:**
    - Set log level to `info` or `warn`
    - Use structured JSON logging
    - Configure log rotation
@@ -177,6 +204,9 @@ services:
       - DATABASE_DB_NAME=user
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - PASSWORD_SECRET=secret_pw
+      - ACCESS_SECRET=secret_ac_token
+      - REFRESH_SECRET=secret_rf_token
       - SERVER_PORT=8080
     ports:
       - "8080:8080"

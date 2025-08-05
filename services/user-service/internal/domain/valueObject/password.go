@@ -2,6 +2,7 @@ package valueobject
 
 import (
 	"errors"
+	"fmt"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -29,6 +30,15 @@ func (p Password) Hash() (string, error) {
 	return string(bytes), error
 }
 
-func (p Password) CompareHash(hash Password) error {
-	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(p))
+func (p Password) CompareHash(passwordString string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(p), []byte(passwordString))
+	if err == nil {
+		return nil
+	}
+
+	if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
+		return fmt.Errorf("password does not match: %w", err)
+	}
+
+	return err
 }

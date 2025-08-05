@@ -141,7 +141,7 @@ make migrate-up   # Run database migrations
 - **Status**: ✅ Active Development
 - **Port**: 8100
 - **Database**: user_db
-- **Features**: User registration, authentication, profile management
+- **Features**: User registration, JWT authentication, profile management, login/logout
 - **Documentation**: [User Service Docs](services/user-service/docs/README.md)
 
 ### Product Service
@@ -166,6 +166,7 @@ This project follows **Clean Architecture** principles with strict dependency ru
 - **Cache**: Redis
 - **API**: Connect-RPC for type-safe HTTP/gRPC
 - **Code Generation**: SQLC for type-safe SQL, Buf for protobuf
+- **Authentication**: JWT with access/refresh tokens
 - **Migration**: golang-migrate
 - **Messaging**: NATS (planned)
 
