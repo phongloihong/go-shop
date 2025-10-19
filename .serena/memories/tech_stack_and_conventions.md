@@ -1,7 +1,7 @@
 # Tech Stack và Code Conventions
 
 ## Tech Stack chính
-- **Go 1.24.2**: Ngôn ngữ chính
+- **Go 1.25.1**: Ngôn ngữ chính
 - **PostgreSQL**: Database chính với pgx/v5 driver
 - **Redis**: Cache layer
 - **Docker & Docker Compose**: Development environment

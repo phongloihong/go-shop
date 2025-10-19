@@ -1,6 +1,6 @@
 module github.com/phongloihong/go-shop/services/user-service
 
-go 1.24.2
+go 1.25.1
 
 require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.6-20250717185734-6c6e0d3c608e.1

@@ -71,7 +71,7 @@ Go Shop is a microservices-based travel planning application built with Clean Ar
 ## Technology Stack
 
 ### Core Technologies
-- **Language**: Go 1.24.2
+- **Language**: Go 1.25.1
 - **Database**: PostgreSQL 16 with pgx/v5 driver
 - **Cache**: Redis 7
 - **API Framework**: Connect-RPC for type-safe HTTP/gRPC

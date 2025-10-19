@@ -6,7 +6,7 @@ This document describes how to set up a local development environment for the Us
 
 ### Required Software
 
-- **Go 1.24.2 or higher**
+- **Go 1.25.1 or higher**
 - **PostgreSQL 12 or higher**
 - **Redis 6 or higher**
 - **Git**
