@@ -16,7 +16,7 @@ Dự án tuân theo **Clean Architecture** với 4 tầng:
 4. **Infrastructure Layer** (outermost): Database, external services
 
 ## Tech Stack
-- **Language**: Go 1.24.2
+- **Language**: Go 1.25.1
 - **Database**: PostgreSQL với pgx/v5 driver  
 - **Cache**: Redis
 - **Code Generation**: sqlc cho type-safe SQL queries

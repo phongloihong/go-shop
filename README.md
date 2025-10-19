@@ -161,7 +161,7 @@ This project follows **Clean Architecture** principles with strict dependency ru
 
 ### Technology Stack
 
-- **Language**: Go 1.24.2
+- **Language**: Go 1.25.1
 - **Database**: PostgreSQL with pgx/v5
 - **Cache**: Redis
 - **API**: Connect-RPC for type-safe HTTP/gRPC

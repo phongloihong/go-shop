@@ -1,5 +1,5 @@
 # Development Dockerfile with hot reload and proto generation support
-FROM golang:1.24.2-alpine AS development
+FROM golang:1.25.1-alpine AS development
 
 # Install development dependencies
 RUN apk add --no-cache \
